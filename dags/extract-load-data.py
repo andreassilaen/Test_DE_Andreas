@@ -10,9 +10,9 @@ from airflow.utils.dates import days_ago
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/opt/airflow/dags/SA.json"
 
 # BigQuery configuration
-project_id = "sage-outrider-418915"
-destination_table = "dwh_retail_transactions.raw_retail"  # e.g., dataset.table_name
-sql_query = "SELECT * FROM retail_transactions;"  # Modify with your table/query
+project_id = "sage-outrider-418915" # Project Bigquery
+destination_table = "dwh_retail_transactions.raw_retail"  # Tabel target load di Bogquery
+sql_query = "SELECT * FROM retail_transactions;"  
 
 def extract_data():
     """Extract data from PostgreSQL and return as DataFrame using PostgresHook"""
@@ -23,7 +23,7 @@ def extract_data():
 
         # Running the SQL query
         print("Executing query...")
-        df = pg_hook.get_pandas_df(sql_query)  # This returns the query result as a DataFrame
+        df = pg_hook.get_pandas_df(sql_query) 
 
         print("Data successfully extracted from PostgreSQL.")
         return df
@@ -47,16 +47,16 @@ def load_data_to_bigquery(**kwargs):
         print(f"An error occurred during loading to BigQuery: {e}")
         raise
 
-# Define the DAG
+# DAG
 dag = DAG(
     'extract_load_data_dag',
     description='Melakukan Extract data dari PostgreSQL(local) ke BigQuery(Cloud) By Andreas Silaen - Test Lion Parcel - Data Engineer',
-    schedule_interval="@hourly",  # Run every hour
+    schedule_interval="@hourly",  # Run DAG Setiap Jam
     start_date=days_ago(1),
     catchup=False,
 )
 
-# Define the tasks
+# Tasks
 extract_task = PythonOperator(
     task_id='extract_data',
     python_callable=extract_data,
@@ -71,5 +71,5 @@ load_task = PythonOperator(
     dag=dag,
 )
 
-# Task dependencies
+# Task Dependencies
 extract_task >> load_task
