@@ -50,7 +50,7 @@ def load_data_to_bigquery(**kwargs):
 # Define the DAG
 dag = DAG(
     'extract_load_data_dag',
-    description='Extract data from PostgreSQL and load into BigQuery By Andreas Silaen - Test Lion Parcel - Data Engineer',
+    description='Melakukan Extract data dari PostgreSQL(local) ke BigQuery(Cloud) By Andreas Silaen - Test Lion Parcel - Data Engineer',
     schedule_interval="@hourly",  # Run every hour
     start_date=days_ago(1),
     catchup=False,
